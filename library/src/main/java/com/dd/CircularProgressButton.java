@@ -57,6 +57,8 @@ public class CircularProgressButton extends Button {
     private boolean mIndeterminateProgressMode;
     private boolean mConfigurationChanged;
 
+    private int mAnimationDuration;
+
     private int mLeftPadding;
     private int mRightPadding;
 
@@ -98,6 +100,8 @@ public class CircularProgressButton extends Button {
 
         mLeftPadding = getPaddingLeft();
         mRightPadding = getPaddingRight();
+
+        mAnimationDuration = MorphingAnimation.DURATION_NORMAL;
     }
 
     private void initErrorStateDrawable() {
@@ -279,6 +283,14 @@ public class CircularProgressButton extends Button {
         mProgressDrawable.draw(canvas);
     }
 
+    public void setAnimationDuration(int duration) {
+        mAnimationDuration = duration;
+    }
+
+    public int getAnimationDuration() {
+        return mAnimationDuration;
+    }
+
     public boolean isIndeterminateProgressMode() {
         return mIndeterminateProgressMode;
     }
@@ -305,7 +317,7 @@ public class CircularProgressButton extends Button {
         if (mConfigurationChanged) {
             animation.setDuration(MorphingAnimation.DURATION_INSTANT);
         } else {
-            animation.setDuration(MorphingAnimation.DURATION_NORMAL);
+            animation.setDuration(mAnimationDuration > 0 ? mAnimationDuration : MorphingAnimation.DURATION_NORMAL);
         }
 
         mConfigurationChanged = false;
