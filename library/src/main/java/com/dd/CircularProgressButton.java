@@ -57,6 +57,9 @@ public class CircularProgressButton extends Button {
     private boolean mIndeterminateProgressMode;
     private boolean mConfigurationChanged;
 
+    private int mLeftPadding;
+    private int mRightPadding;
+
     private enum State {
         PROGRESS, IDLE, COMPLETE, ERROR
     }
@@ -92,6 +95,9 @@ public class CircularProgressButton extends Button {
 
         initIdleStateDrawable();
         setBackgroundCompat(mIdleStateDrawable);
+
+        mLeftPadding = getPaddingLeft();
+        mRightPadding = getPaddingRight();
     }
 
     private void initErrorStateDrawable() {
@@ -504,10 +510,12 @@ public class CircularProgressButton extends Button {
         if (drawable != null) {
             setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0);
 
-            if(center) {
-                int padding = center ? (getWidth() / 2) - (drawable.getIntrinsicWidth() / 2) : 0;
+            if (center) {
+                int padding = (getWidth() / 2) - (drawable.getIntrinsicWidth() / 2);
 
                 setPadding(padding / 2, 0, padding / 2, 0);
+            } else {
+                setPadding(mLeftPadding, 0, mRightPadding, 0);
             }
         } else {
             removeIcon(center || icon == 0);
@@ -517,8 +525,12 @@ public class CircularProgressButton extends Button {
     protected void removeIcon(boolean center) {
         setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 
-        if(center) {
-            setPadding(0, 0, 0, 0);
+        if (center) {
+            int padding = 0;
+
+            setPadding(padding, 0, padding, 0);
+        } else {
+            setPadding(mLeftPadding, 0, mRightPadding, 0);
         }
     }
 
