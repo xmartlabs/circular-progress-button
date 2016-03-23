@@ -3,27 +3,21 @@ import java.text.SimpleDateFormat
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '21.1.2'
+    compileSdkVersion 23
+    buildToolsVersion '23.0.3'
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 23
         applicationId project.PACKAGE_NAME
         versionCode Integer.parseInt(project.VERSION_CODE)
         versionName project.VERSION_NAME
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
-    }
-
-    applicationVariants.all { variant ->
-        def oldFile = variant.outputFile
-        def newPath = "${variant.name}" + "_" + "${variant.versionName}" + "_" + "${variant.versionCode}" + "_" + getDate() + ".apk";
-        variant.outputFile = new File(oldFile.parentFile, newPath)
     }
 }
 
