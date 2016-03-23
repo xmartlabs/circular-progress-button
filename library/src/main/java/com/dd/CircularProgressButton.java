@@ -332,7 +332,9 @@ public class CircularProgressButton extends Button {
 
     private void morphToProgress() {
         setWidth(getWidth());
+
         setText(mProgressText);
+        removeIcon(true);
 
         MorphingAnimation animation = createProgressMorphing(mCornerRadius, getHeight(), getWidth(), getHeight());
 
@@ -500,17 +502,24 @@ public class CircularProgressButton extends Button {
     private void setIcon(int icon, boolean center) {
         Drawable drawable = icon != 0 ? getResources().getDrawable(icon) : null;
         if (drawable != null) {
-            int padding = center ? (getWidth() / 2) - (drawable.getIntrinsicWidth() / 2) : 0;
             setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0);
-            setPadding(padding, 0, 0, 0);
+
+            if(center) {
+                int padding = center ? (getWidth() / 2) - (drawable.getIntrinsicWidth() / 2) : 0;
+
+                setPadding(padding / 2, 0, padding / 2, 0);
+            }
         } else {
-            removeIcon();
+            removeIcon(center || icon == 0);
         }
     }
 
-    protected void removeIcon() {
+    protected void removeIcon(boolean center) {
         setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        setPadding(0, 0, 0, 0);
+
+        if(center) {
+            setPadding(0, 0, 0, 0);
+        }
     }
 
     /**
@@ -534,8 +543,6 @@ public class CircularProgressButton extends Button {
         }
 
         mStateManager.saveProgress(this);
-
-        removeIcon();
 
         if (mProgress >= SUCCESS_STATE_PROGRESS) {
             if (mState == State.PROGRESS) {
