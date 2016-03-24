@@ -9,7 +9,7 @@ Thank you for using my libraries.
 
 **Note:** updated version of this library will be available [here](https://github.com/dmytrodanylyk/android-morphing-button).
 
-### Description [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.dmytrodanylyk.circular-progress-button/library/badge.png?style=flat)](http://goo.gl/cKevJjr) [![Android Arsenal](http://img.shields.io/badge/Android%20Arsenal-Circular%20Progress%20Button-brightgreen.png?style=flat)](http://android-arsenal.com/details/1/67)
+### Description
 
 Android Button which can morph to Circular Progress
 
@@ -27,7 +27,7 @@ The lib is available on Maven Central, you can find it with [Gradle, please]
 
 ```
 dependencies {
-    compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
+    compile 'com.github.smartcanvas:circular-progress-button:1.2.2'
 }
 ```
 

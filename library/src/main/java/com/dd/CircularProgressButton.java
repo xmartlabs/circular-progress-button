@@ -64,7 +64,7 @@ public class CircularProgressButton extends Button {
     private int mLeftPadding;
     private int mRightPadding;
 
-    private enum State {
+    public enum State {
         PROGRESS, IDLE, COMPLETE, ERROR
     }
 
