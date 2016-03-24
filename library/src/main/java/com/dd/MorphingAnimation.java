@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.graphics.drawable.GradientDrawable;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ class MorphingAnimation {
     private OnAnimationEndListener mListener;
 
     private int mDuration;
+    private TimeInterpolator mInterpolator;
 
     private int mFromWidth;
     private int mToWidth;
@@ -41,6 +43,10 @@ class MorphingAnimation {
 
     public void setDuration(int duration) {
         mDuration = duration;
+    }
+
+    public void setInterpolator(TimeInterpolator interpolator) {
+        mInterpolator = interpolator;
     }
 
     public void setListener(OnAnimationEndListener listener) {
@@ -121,6 +127,7 @@ class MorphingAnimation {
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(mDuration);
+        animatorSet.setInterpolator(mInterpolator);
         animatorSet.playTogether(widthAnimation, bgColorAnimation, strokeColorAnimation, cornerAnimation);
         animatorSet.addListener(new Animator.AnimatorListener() {
             @Override
