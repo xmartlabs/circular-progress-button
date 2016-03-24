@@ -340,7 +340,7 @@ public class CircularProgressButton extends Button {
         if (mConfigurationChanged) {
             animation.setDuration(MorphingAnimation.DURATION_INSTANT);
         } else {
-            animation.setDuration(MorphingAnimation.DURATION_NORMAL);
+            animation.setDuration(mAnimationDuration > 0 ? mAnimationDuration : MorphingAnimation.DURATION_NORMAL);
         }
 
         mConfigurationChanged = false;
