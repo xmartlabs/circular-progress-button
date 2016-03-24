@@ -16,6 +16,7 @@ class MorphingAnimation {
 
     private OnAnimationEndListener mListener;
 
+    private long mDelay;
     private int mDuration;
     private TimeInterpolator mInterpolator;
 
@@ -39,6 +40,10 @@ class MorphingAnimation {
     public MorphingAnimation(TextView viewGroup, StrokeGradientDrawable drawable) {
         mView = viewGroup;
         mDrawable = drawable;
+    }
+
+    public void setDelay(long delay) {
+        this.mDelay = delay;
     }
 
     public void setDuration(int duration) {
@@ -126,6 +131,7 @@ class MorphingAnimation {
                 ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius", mFromCornerRadius, mToCornerRadius);
 
         AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setStartDelay(mDelay);
         animatorSet.setDuration(mDuration);
         animatorSet.setInterpolator(mInterpolator);
         animatorSet.playTogether(widthAnimation, bgColorAnimation, strokeColorAnimation, cornerAnimation);

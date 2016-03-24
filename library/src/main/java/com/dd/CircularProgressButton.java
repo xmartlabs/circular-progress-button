@@ -26,6 +26,7 @@ public class CircularProgressButton extends Button {
     public static final int INDETERMINATE_STATE_PROGRESS = 50;
 
     private StrokeGradientDrawable background;
+
     private CircularAnimatedDrawable mAnimatedDrawable;
     private CircularProgressDrawable mProgressDrawable;
 
@@ -58,6 +59,7 @@ public class CircularProgressButton extends Button {
     private boolean mIndeterminateProgressMode;
     private boolean mConfigurationChanged;
 
+    private long mDelay;
     private int mDuration;
     private TimeInterpolator mInterpolator;
 
@@ -74,16 +76,19 @@ public class CircularProgressButton extends Button {
 
     public CircularProgressButton(Context context) {
         super(context);
+
         init(context, null);
     }
 
     public CircularProgressButton(Context context, AttributeSet attrs) {
         super(context, attrs);
+
         init(context, attrs);
     }
 
     public CircularProgressButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
         init(context, attrs);
     }
 
@@ -131,6 +136,7 @@ public class CircularProgressButton extends Button {
         int colorPressed = getPressedColor(mIdleColorState);
         int colorFocused = getFocusedColor(mIdleColorState);
         int colorDisabled = getDisabledColor(mIdleColorState);
+
         if (background == null) {
             background = createDrawable(colorNormal);
         }
@@ -138,6 +144,7 @@ public class CircularProgressButton extends Button {
         StrokeGradientDrawable drawableDisabled = createDrawable(colorDisabled);
         StrokeGradientDrawable drawableFocused = createDrawable(colorFocused);
         StrokeGradientDrawable drawablePressed = createDrawable(colorPressed);
+
         mIdleStateDrawable = new StateListDrawable();
 
         mIdleStateDrawable.addState(new int[]{android.R.attr.state_pressed}, drawablePressed.getGradientDrawable());
@@ -166,6 +173,7 @@ public class CircularProgressButton extends Button {
         GradientDrawable drawable = (GradientDrawable) getResources().getDrawable(R.drawable.cpb_background).mutate();
         drawable.setColor(color);
         drawable.setCornerRadius(mCornerRadius);
+
         StrokeGradientDrawable strokeGradientDrawable = new StrokeGradientDrawable(drawable);
         strokeGradientDrawable.setStrokeColor(color);
         strokeGradientDrawable.setStrokeWidth(mStrokeWidth);
@@ -193,12 +201,12 @@ public class CircularProgressButton extends Button {
 
     private void initAttributes(Context context, AttributeSet attributeSet) {
         TypedArray attr = getTypedArray(context, attributeSet, R.styleable.CircularProgressButton);
+
         if (attr == null) {
             return;
         }
 
         try {
-
             mIdleText = attr.getString(R.styleable.CircularProgressButton_cpb_textIdle);
             mCompleteText = attr.getString(R.styleable.CircularProgressButton_cpb_textComplete);
             mErrorText = attr.getString(R.styleable.CircularProgressButton_cpb_textError);
@@ -214,22 +222,18 @@ public class CircularProgressButton extends Button {
             int white = getColor(R.color.cpb_white);
             int grey = getColor(R.color.cpb_grey);
 
-            int idleStateSelector = attr.getResourceId(R.styleable.CircularProgressButton_cpb_selectorIdle,
-                    R.color.cpb_idle_state_selector);
+            int idleStateSelector = attr.getResourceId(R.styleable.CircularProgressButton_cpb_selectorIdle, R.color.cpb_idle_state_selector);
             mIdleColorState = getResources().getColorStateList(idleStateSelector);
 
-            int completeStateSelector = attr.getResourceId(R.styleable.CircularProgressButton_cpb_selectorComplete,
-                    R.color.cpb_complete_state_selector);
+            int completeStateSelector = attr.getResourceId(R.styleable.CircularProgressButton_cpb_selectorComplete, R.color.cpb_complete_state_selector);
             mCompleteColorState = getResources().getColorStateList(completeStateSelector);
 
-            int errorStateSelector = attr.getResourceId(R.styleable.CircularProgressButton_cpb_selectorError,
-                    R.color.cpb_error_state_selector);
+            int errorStateSelector = attr.getResourceId(R.styleable.CircularProgressButton_cpb_selectorError, R.color.cpb_error_state_selector);
             mErrorColorState = getResources().getColorStateList(errorStateSelector);
 
             mColorProgress = attr.getColor(R.styleable.CircularProgressButton_cpb_colorProgress, white);
             mColorIndicator = attr.getColor(R.styleable.CircularProgressButton_cpb_colorIndicator, blue);
-            mColorIndicatorBackground =
-                    attr.getColor(R.styleable.CircularProgressButton_cpb_colorIndicatorBackground, grey);
+            mColorIndicatorBackground = attr.getColor(R.styleable.CircularProgressButton_cpb_colorIndicatorBackground, grey);
         } finally {
             attr.recycle();
         }
@@ -280,9 +284,18 @@ public class CircularProgressButton extends Button {
             int left = offset + mPaddingProgress;
             mProgressDrawable.setBounds(left, mPaddingProgress, left, mPaddingProgress);
         }
+
         float sweepAngle = (360f / SUCCESS_STATE_PROGRESS) * mProgress;
         mProgressDrawable.setSweepAngle(sweepAngle);
         mProgressDrawable.draw(canvas);
+    }
+
+    public long getDelay() {
+        return mDelay;
+    }
+
+    public void setDelay(long delay) {
+        this.mDelay = delay;
     }
 
     public void setDuration(int duration) {
@@ -324,6 +337,8 @@ public class CircularProgressButton extends Button {
         animation.setFromWidth(getWidth());
         animation.setToWidth(getWidth());
 
+        animation.setDelay(mDelay);
+
         if (mConfigurationChanged) {
             animation.setDuration(MorphingAnimation.DURATION_INSTANT);
         } else {
@@ -348,6 +363,8 @@ public class CircularProgressButton extends Button {
 
         animation.setFromWidth(fromWidth);
         animation.setToWidth(toWidth);
+
+        animation.setDelay(mDelay);
 
         if (mConfigurationChanged) {
             animation.setDuration(MorphingAnimation.DURATION_INSTANT);
@@ -403,7 +420,6 @@ public class CircularProgressButton extends Button {
         animation.setListener(mCompleteStateListener);
 
         animation.start();
-
     }
 
     private void morphIdleToComplete() {
@@ -418,7 +434,6 @@ public class CircularProgressButton extends Button {
         animation.setListener(mCompleteStateListener);
 
         animation.start();
-
     }
 
     private OnAnimationEndListener mCompleteStateListener = new OnAnimationEndListener() {
@@ -461,7 +476,6 @@ public class CircularProgressButton extends Button {
         animation.setListener(mIdleStateListener);
 
         animation.start();
-
     }
 
     private OnAnimationEndListener mIdleStateListener = new OnAnimationEndListener() {
@@ -489,7 +503,6 @@ public class CircularProgressButton extends Button {
         animation.setListener(mErrorStateListener);
 
         animation.start();
-
     }
 
     private void morphProgressToError() {
@@ -685,6 +698,7 @@ public class CircularProgressButton extends Button {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+
         if (changed) {
             setProgress(mProgress);
         }
@@ -728,6 +742,7 @@ public class CircularProgressButton extends Button {
 
         private SavedState(Parcel in) {
             super(in);
+
             mProgress = in.readInt();
             mIndeterminateProgressMode = in.readInt() == 1;
             mConfigurationChanged = in.readInt() == 1;
@@ -736,6 +751,7 @@ public class CircularProgressButton extends Button {
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
+
             out.writeInt(mProgress);
             out.writeInt(mIndeterminateProgressMode ? 1 : 0);
             out.writeInt(mConfigurationChanged ? 1 : 0);
