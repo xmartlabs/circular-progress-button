@@ -573,6 +573,41 @@ public class CircularProgressButton extends Button {
         }
     }
 
+    public void setState(State state) throws Exception {
+        if(state != null) {
+            switch (state) {
+                case IDLE:
+                    setProgress(IDLE_STATE_PROGRESS);
+                    break;
+
+                case PROGRESS:
+                    if (isIndeterminateProgressMode()) {
+                        setProgress(INDETERMINATE_STATE_PROGRESS);
+                    } else {
+                        throw new InvalidStateException(state);
+                    }
+                    break;
+
+                case COMPLETE:
+                    setProgress(SUCCESS_STATE_PROGRESS);
+                    break;
+
+                case ERROR:
+                    setProgress(ERROR_STATE_PROGRESS);
+                    break;
+
+                default:
+                    throw new InvalidStateException(state);
+            }
+        } else {
+            throw new InvalidStateException();
+        }
+    }
+
+    public State getState() {
+        return mState;
+    }
+
     public void setProgress(int progress) {
         mProgress = progress;
 
@@ -718,5 +753,27 @@ public class CircularProgressButton extends Button {
                 return new SavedState[size];
             }
         };
+    }
+
+    private class InvalidStateException extends Exception {
+
+        private final State mErrorState;
+
+        public InvalidStateException() {
+            this(null);
+        }
+
+        public InvalidStateException(State state) {
+            mErrorState = state;
+        }
+
+        public State getErrorState() {
+            return mErrorState;
+        }
+
+        @Override
+        public String getMessage() {
+            return String.format("InvalidState: " + (mErrorState != null ? mErrorState.name() : "NULL"));
+        }
     }
 }
