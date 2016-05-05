@@ -48,6 +48,8 @@ public class CircularProgressButton extends Button {
     private int mColorProgress;
     private int mColorIndicator;
     private int mColorIndicatorBackground;
+    private int mDisabledStrokeWidth;
+    private int mDisabledStrokeColor;
 
     private int mIconIdle;
     private int mIconComplete;
@@ -144,6 +146,12 @@ public class CircularProgressButton extends Button {
         StrokeGradientDrawable drawableDisabled = createDrawable(colorDisabled);
         StrokeGradientDrawable drawableFocused = createDrawable(colorFocused);
         StrokeGradientDrawable drawablePressed = createDrawable(colorPressed);
+        if (mDisabledStrokeColor != -1) {
+            drawableDisabled.setStrokeColor(mDisabledStrokeColor);
+        }
+        if (mDisabledStrokeWidth != -1) {
+            drawableDisabled.setStrokeWidth(mDisabledStrokeWidth);
+        }
 
         mIdleStateDrawable = new StateListDrawable();
 
@@ -221,6 +229,9 @@ public class CircularProgressButton extends Button {
             int blue = getColor(R.color.cpb_blue);
             int white = getColor(R.color.cpb_white);
             int grey = getColor(R.color.cpb_grey);
+
+            mDisabledStrokeColor = attr.getColor(R.styleable.CircularProgressButton_cpb_disabledStrokeColor, -1);
+            mDisabledStrokeWidth = attr.getDimensionPixelSize(R.styleable.CircularProgressButton_cpb_disabledStrokeWidth, -1);
 
             int idleStateSelector = attr.getResourceId(R.styleable.CircularProgressButton_cpb_selectorIdle, R.color.cpb_idle_state_selector);
             mIdleColorState = getResources().getColorStateList(idleStateSelector);
