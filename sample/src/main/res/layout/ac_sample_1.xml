@@ -8,20 +8,23 @@
 
     <com.dd.CircularProgressButton
         android:id="@+id/circularButton1"
-        android:layout_width="196dp"
-        android:layout_height="64dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="60dp"
         android:textColor="@color/cpb_white"
         android:textSize="18sp"
         app:cpb_cornerRadius="48dp"
         app:cpb_iconComplete="@drawable/ic_action_accept"
         app:cpb_iconError="@drawable/ic_action_cancel"
         app:cpb_textIdle="@string/Upload" />
+    <!-- FIXME: if using wrap_content in height and want to show complete or error states, it will enlarge the button. -->
 
     <com.dd.CircularProgressButton
         android:id="@+id/circularButton2"
-        android:layout_width="196dp"
-        android:layout_height="64dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:padding="60dp"
         android:textColor="@color/cpb_white"
         android:textSize="18sp"
         app:cpb_cornerRadius="48dp"
