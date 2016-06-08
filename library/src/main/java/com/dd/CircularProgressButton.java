@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -30,13 +31,13 @@ public class CircularProgressButton extends Button {
     private CircularAnimatedDrawable mAnimatedDrawable;
     private CircularProgressDrawable mProgressDrawable;
 
-    private ColorStateList mIdleColorState;
-    private ColorStateList mCompleteColorState;
-    private ColorStateList mErrorColorState;
+    private int mIdleColor;
+    private int mCompleteColor;
+    private int mErrorColor;
 
-    private StateListDrawable mIdleStateDrawable;
-    private StateListDrawable mCompleteStateDrawable;
-    private StateListDrawable mErrorStateDrawable;
+    private Drawable mIdleBackground;
+    private Drawable mCompleteBackground;
+    private Drawable mErrorBackground;
 
     private StateManager mStateManager;
     private State mState;
@@ -106,79 +107,12 @@ public class CircularProgressButton extends Button {
 
         setText(mIdleText);
 
-        initIdleStateDrawable();
-        setBackgroundCompat(mIdleStateDrawable);
+        setBackgroundCompat(mIdleBackground);
 
         mLeftPadding = getPaddingLeft();
         mRightPadding = getPaddingRight();
 
         mDuration = MorphingAnimation.DURATION_NORMAL;
-    }
-
-    private void initErrorStateDrawable() {
-        int colorPressed = getPressedColor(mErrorColorState);
-
-        StrokeGradientDrawable drawablePressed = createDrawable(colorPressed);
-        mErrorStateDrawable = new StateListDrawable();
-
-        mErrorStateDrawable.addState(new int[]{android.R.attr.state_pressed}, drawablePressed.getGradientDrawable());
-        mErrorStateDrawable.addState(StateSet.WILD_CARD, background.getGradientDrawable());
-    }
-
-    private void initCompleteStateDrawable() {
-        int colorPressed = getPressedColor(mCompleteColorState);
-
-        StrokeGradientDrawable drawablePressed = createDrawable(colorPressed);
-        if (mStrokeColor != -1) {
-            drawablePressed.setStrokeColor(mStrokeColor);
-            background.setStrokeColor(mStrokeColor);
-        }
-        if (mIdleStrokeWidth != -1) {
-            drawablePressed.setStrokeWidth(mIdleStrokeWidth);
-        }
-        mCompleteStateDrawable = new StateListDrawable();
-
-        mCompleteStateDrawable.addState(new int[]{android.R.attr.state_pressed}, drawablePressed.getGradientDrawable());
-        mCompleteStateDrawable.addState(StateSet.WILD_CARD, background.getGradientDrawable());
-    }
-
-    private void initIdleStateDrawable() {
-        int colorNormal = getNormalColor(mIdleColorState);
-        int colorPressed = getPressedColor(mIdleColorState);
-        int colorFocused = getFocusedColor(mIdleColorState);
-        int colorDisabled = getDisabledColor(mIdleColorState);
-
-        if (background == null) {
-            background = createDrawable(colorNormal);
-        }
-
-        StrokeGradientDrawable drawableDisabled = createDrawable(colorDisabled);
-        StrokeGradientDrawable drawableFocused = createDrawable(colorFocused);
-        StrokeGradientDrawable drawablePressed = createDrawable(colorPressed);
-        if (mDisabledStrokeColor != -1) {
-            drawableDisabled.setStrokeColor(mDisabledStrokeColor);
-        }
-        if (mDisabledStrokeWidth != -1) {
-            drawableDisabled.setStrokeWidth(mDisabledStrokeWidth);
-        }
-
-        if (mStrokeColor != -1) {
-            drawableFocused.setStrokeColor(mStrokeColor);
-            drawablePressed.setStrokeColor(mStrokeColor);
-            background.setStrokeColor(mStrokeColor);
-        }
-        if (mIdleStrokeWidth != -1) {
-            drawableFocused.setStrokeWidth(mIdleStrokeWidth);
-            drawablePressed.setStrokeWidth(mIdleStrokeWidth);
-            background.setStrokeWidth(mIdleStrokeWidth);
-        }
-
-        mIdleStateDrawable = new StateListDrawable();
-
-        mIdleStateDrawable.addState(new int[]{android.R.attr.state_pressed}, drawablePressed.getGradientDrawable());
-        mIdleStateDrawable.addState(new int[]{android.R.attr.state_focused}, drawableFocused.getGradientDrawable());
-        mIdleStateDrawable.addState(new int[]{-android.R.attr.state_enabled}, drawableDisabled.getGradientDrawable());
-        mIdleStateDrawable.addState(StateSet.WILD_CARD, background.getGradientDrawable());
     }
 
     private int getNormalColor(ColorStateList colorStateList) {
@@ -212,14 +146,11 @@ public class CircularProgressButton extends Button {
     @Override
     protected void drawableStateChanged() {
         if (mState == State.COMPLETE) {
-            initCompleteStateDrawable();
-            setBackgroundCompat(mCompleteStateDrawable);
+            setBackgroundCompat(mCompleteBackground);
         } else if (mState == State.IDLE) {
-            initIdleStateDrawable();
-            setBackgroundCompat(mIdleStateDrawable);
+            setBackgroundCompat(mIdleBackground);
         } else if (mState == State.ERROR) {
-            initErrorStateDrawable();
-            setBackgroundCompat(mErrorStateDrawable);
+            setBackgroundCompat(mErrorBackground);
         }
 
         if (mState != State.PROGRESS) {
@@ -255,15 +186,12 @@ public class CircularProgressButton extends Button {
             mStrokeColor = attr.getColor(R.styleable.CircularProgressButton_cpb_strokeColor, -1);
             mStrokeWidth = attr.getDimensionPixelSize(R.styleable.CircularProgressButton_cpb_strokeWidth, mStrokeWidth);
             mIdleStrokeWidth = attr.getDimensionPixelSize(R.styleable.CircularProgressButton_cpb_idleStrokeWidth, -1);
-
-            int idleStateSelector = attr.getResourceId(R.styleable.CircularProgressButton_cpb_selectorIdle, R.color.cpb_idle_state_selector);
-            mIdleColorState = getResources().getColorStateList(idleStateSelector);
-
-            int completeStateSelector = attr.getResourceId(R.styleable.CircularProgressButton_cpb_selectorComplete, R.color.cpb_complete_state_selector);
-            mCompleteColorState = getResources().getColorStateList(completeStateSelector);
-
-            int errorStateSelector = attr.getResourceId(R.styleable.CircularProgressButton_cpb_selectorError, R.color.cpb_error_state_selector);
-            mErrorColorState = getResources().getColorStateList(errorStateSelector);
+            mIdleColor = attr.getColor(R.styleable.CircularProgressButton_cpb_idleColor, -1);
+            mCompleteColor = attr.getColor(R.styleable.CircularProgressButton_cpb_completeColor, -1);
+            mErrorColor = attr.getColor(R.styleable.CircularProgressButton_cpb_errorColor, -1);
+            mIdleBackground = attr.getDrawable(R.styleable.CircularProgressButton_cpb_idleBackground);
+            mCompleteBackground = attr.getDrawable(R.styleable.CircularProgressButton_cpb_idleBackground);
+            mErrorBackground = attr.getDrawable(R.styleable.CircularProgressButton_cpb_idleBackground);
 
             mColorProgress = attr.getColor(R.styleable.CircularProgressButton_cpb_colorProgress, white);
             mColorIndicator = attr.getColor(R.styleable.CircularProgressButton_cpb_colorIndicator, blue);
@@ -421,10 +349,10 @@ public class CircularProgressButton extends Button {
 
         MorphingAnimation animation = createProgressMorphing(mCornerRadius, getHeight(), getWidth(), getHeight());
 
-        animation.setFromColor(getNormalColor(mIdleColorState));
+        animation.setFromColor(mIdleColor);
         animation.setToColor(mColorProgress);
 
-        animation.setFromStrokeColor(getNormalColor(mIdleColorState));
+        animation.setFromStrokeColor(mIdleColor);
         animation.setToStrokeColor(mColorIndicatorBackground);
 
         animation.setListener(mProgressStateListener);
@@ -447,10 +375,10 @@ public class CircularProgressButton extends Button {
         MorphingAnimation animation = createProgressMorphing(getHeight(), mCornerRadius, getHeight(), getWidth());
 
         animation.setFromColor(mColorProgress);
-        animation.setToColor(getNormalColor(mCompleteColorState));
+        animation.setToColor(mCompleteColor);
 
         animation.setFromStrokeColor(mColorIndicator);
-        animation.setToStrokeColor(getNormalColor(mCompleteColorState));
+        animation.setToStrokeColor(mCompleteColor);
 
         animation.setListener(mCompleteStateListener);
 
@@ -460,11 +388,11 @@ public class CircularProgressButton extends Button {
     private void morphIdleToComplete() {
         MorphingAnimation animation = createMorphing();
 
-        animation.setFromColor(getNormalColor(mIdleColorState));
-        animation.setToColor(getNormalColor(mCompleteColorState));
+        animation.setFromColor(mIdleColor);
+        animation.setToColor(mCompleteColor);
 
-        animation.setFromStrokeColor(getNormalColor(mIdleColorState));
-        animation.setToStrokeColor(getNormalColor(mCompleteColorState));
+        animation.setFromStrokeColor(mIdleColor);
+        animation.setToStrokeColor(mCompleteColor);
 
         animation.setListener(mCompleteStateListener);
 
@@ -487,11 +415,11 @@ public class CircularProgressButton extends Button {
     private void morphCompleteToIdle() {
         MorphingAnimation animation = createMorphing();
 
-        animation.setFromColor(getNormalColor(mCompleteColorState));
-        animation.setToColor(getNormalColor(mIdleColorState));
+        animation.setFromColor(mCompleteColor);
+        animation.setToColor(mIdleColor);
 
-        animation.setFromStrokeColor(getNormalColor(mCompleteColorState));
-        animation.setToStrokeColor(getNormalColor(mIdleColorState));
+        animation.setFromStrokeColor(mCompleteColor);
+        animation.setToStrokeColor(mIdleColor);
 
         animation.setListener(mIdleStateListener);
 
@@ -502,11 +430,11 @@ public class CircularProgressButton extends Button {
     private void morphErrorToIdle() {
         MorphingAnimation animation = createMorphing();
 
-        animation.setFromColor(getNormalColor(mErrorColorState));
-        animation.setToColor(getNormalColor(mIdleColorState));
+        animation.setFromColor(mErrorColor);
+        animation.setToColor(mIdleColor);
 
-        animation.setFromStrokeColor(getNormalColor(mErrorColorState));
-        animation.setToStrokeColor(getNormalColor(mIdleColorState));
+        animation.setFromStrokeColor(mErrorColor);
+        animation.setToStrokeColor(mIdleColor);
 
         animation.setListener(mIdleStateListener);
 
@@ -535,11 +463,11 @@ public class CircularProgressButton extends Button {
     private void morphIdleToError() {
         MorphingAnimation animation = createMorphing();
 
-        animation.setFromColor(getNormalColor(mIdleColorState));
-        animation.setToColor(getNormalColor(mErrorColorState));
+        animation.setFromColor(mIdleColor);
+        animation.setToColor(mErrorColor);
 
-        animation.setFromStrokeColor(getNormalColor(mIdleColorState));
-        animation.setToStrokeColor(getNormalColor(mErrorColorState));
+        animation.setFromStrokeColor(mIdleColor);
+        animation.setToStrokeColor(mErrorColor);
 
         animation.setListener(mErrorStateListener);
 
@@ -550,10 +478,10 @@ public class CircularProgressButton extends Button {
         MorphingAnimation animation = createProgressMorphing(getHeight(), mCornerRadius, getHeight(), getWidth());
 
         animation.setFromColor(mColorProgress);
-        animation.setToColor(getNormalColor(mErrorColorState));
+        animation.setToColor(mErrorColor);
 
         animation.setFromStrokeColor(mColorIndicator);
-        animation.setToStrokeColor(getNormalColor(mErrorColorState));
+        animation.setToStrokeColor(mErrorColor);
         animation.setListener(mErrorStateListener);
 
         animation.start();
@@ -576,10 +504,10 @@ public class CircularProgressButton extends Button {
         MorphingAnimation animation = createProgressMorphing(getHeight(), mCornerRadius, getHeight(), getWidth());
 
         animation.setFromColor(mColorProgress);
-        animation.setToColor(getNormalColor(mIdleColorState));
+        animation.setToColor(mIdleColor);
 
         animation.setFromStrokeColor(mColorIndicator);
-        animation.setToStrokeColor(getNormalColor(mIdleColorState));
+        animation.setToStrokeColor(mIdleColor);
         animation.setListener(mIdleStateListener);
 
         animation.start();
