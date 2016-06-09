@@ -109,8 +109,8 @@ public class CircularProgressButton extends Button {
         initIdleStateDrawable();
         setBackgroundCompat(mIdleStateDrawable);
 
-        mLeftPadding = getPaddingLeft();
-        mRightPadding = getPaddingRight();
+        mLeftPadding = getTotalPaddingLeft();
+        mRightPadding = getTotalPaddingRight();
 
         mDuration = MorphingAnimation.DURATION_NORMAL;
     }
@@ -417,7 +417,9 @@ public class CircularProgressButton extends Button {
         setWidth(getWidth());
 
         setText(mProgressText);
-        removeIcon(true);
+        removeIcon();
+
+        setPadding(0, getTotalPaddingTop(), 0, getTotalPaddingBottom());
 
         MorphingAnimation animation = createProgressMorphing(mCornerRadius, getHeight(), getWidth(), getHeight());
 
@@ -591,27 +593,20 @@ public class CircularProgressButton extends Button {
             setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0);
 
             if (center) {
-                int padding = (getWidth() / 2) - (drawable.getIntrinsicWidth() / 2);
+                int padding = (getWidth() + mLeftPadding + mRightPadding) / 2 - drawable.getIntrinsicWidth() / 2;
 
-                setPadding(padding / 2, 0, padding / 2, 0);
+                setPadding(padding / 2, getTotalPaddingTop(), padding / 2, getTotalPaddingBottom());
             } else {
-                setPadding(mLeftPadding, 0, mRightPadding, 0);
+                setPadding(mLeftPadding, getTotalPaddingTop(), mRightPadding, getTotalPaddingBottom());
             }
         } else {
-            removeIcon(center || icon == 0);
+            removeIcon();
         }
     }
 
-    protected void removeIcon(boolean center) {
+    protected void removeIcon() {
         setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-
-        if (center) {
-            int padding = 0;
-
-            setPadding(padding, 0, padding, 0);
-        } else {
-            setPadding(mLeftPadding, 0, mRightPadding, 0);
-        }
+        setPadding(mLeftPadding, getTotalPaddingTop(), mRightPadding, getTotalPaddingBottom());
     }
 
     /**
