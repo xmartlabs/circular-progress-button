@@ -19,6 +19,7 @@ import android.widget.Button;
 import com.dd.circular.progress.button.R;
 
 public class CircularProgressButton extends Button {
+    private static final int COLOR_TRANSPARENT = 0;
 
     public static final int IDLE_STATE_PROGRESS = 0;
     public static final int ERROR_STATE_PROGRESS = -1;
@@ -129,11 +130,11 @@ public class CircularProgressButton extends Button {
         int colorPressed = getPressedColor(mCompleteColorState);
 
         StrokeGradientDrawable drawablePressed = createDrawable(colorPressed);
-        if (mStrokeColor != -1) {
+        if (mStrokeColor != COLOR_TRANSPARENT) {
             drawablePressed.setStrokeColor(mStrokeColor);
             background.setStrokeColor(mStrokeColor);
         }
-        if (mIdleStrokeWidth != -1) {
+        if (mIdleStrokeWidth != COLOR_TRANSPARENT) {
             drawablePressed.setStrokeWidth(mIdleStrokeWidth);
         }
         mCompleteStateDrawable = new StateListDrawable();
@@ -155,19 +156,19 @@ public class CircularProgressButton extends Button {
         StrokeGradientDrawable drawableDisabled = createDrawable(colorDisabled);
         StrokeGradientDrawable drawableFocused = createDrawable(colorFocused);
         StrokeGradientDrawable drawablePressed = createDrawable(colorPressed);
-        if (mDisabledStrokeColor != -1) {
+        if (mDisabledStrokeColor != COLOR_TRANSPARENT) {
             drawableDisabled.setStrokeColor(mDisabledStrokeColor);
         }
-        if (mDisabledStrokeWidth != -1) {
+        if (mDisabledStrokeWidth != COLOR_TRANSPARENT) {
             drawableDisabled.setStrokeWidth(mDisabledStrokeWidth);
         }
 
-        if (mStrokeColor != -1) {
+        if (mStrokeColor != COLOR_TRANSPARENT) {
             drawableFocused.setStrokeColor(mStrokeColor);
             drawablePressed.setStrokeColor(mStrokeColor);
             background.setStrokeColor(mStrokeColor);
         }
-        if (mIdleStrokeWidth != -1) {
+        if (mIdleStrokeWidth != COLOR_TRANSPARENT) {
             drawableFocused.setStrokeWidth(mIdleStrokeWidth);
             drawablePressed.setStrokeWidth(mIdleStrokeWidth);
             background.setStrokeWidth(mIdleStrokeWidth);
@@ -250,11 +251,11 @@ public class CircularProgressButton extends Button {
             int white = getColor(R.color.cpb_white);
             int grey = getColor(R.color.cpb_grey);
 
-            mDisabledStrokeColor = attr.getColor(R.styleable.CircularProgressButton_cpb_disabledStrokeColor, -1);
-            mDisabledStrokeWidth = attr.getDimensionPixelSize(R.styleable.CircularProgressButton_cpb_disabledStrokeWidth, -1);
-            mStrokeColor = attr.getColor(R.styleable.CircularProgressButton_cpb_strokeColor, -1);
+            mDisabledStrokeColor = attr.getColor(R.styleable.CircularProgressButton_cpb_disabledStrokeColor, COLOR_TRANSPARENT);
+            mDisabledStrokeWidth = attr.getDimensionPixelSize(R.styleable.CircularProgressButton_cpb_disabledStrokeWidth, COLOR_TRANSPARENT);
+            mStrokeColor = attr.getColor(R.styleable.CircularProgressButton_cpb_strokeColor, COLOR_TRANSPARENT);
             mStrokeWidth = attr.getDimensionPixelSize(R.styleable.CircularProgressButton_cpb_strokeWidth, mStrokeWidth);
-            mIdleStrokeWidth = attr.getDimensionPixelSize(R.styleable.CircularProgressButton_cpb_idleStrokeWidth, -1);
+            mIdleStrokeWidth = attr.getDimensionPixelSize(R.styleable.CircularProgressButton_cpb_idleStrokeWidth, COLOR_TRANSPARENT);
 
             int idleStateSelector = attr.getResourceId(R.styleable.CircularProgressButton_cpb_selectorIdle, R.color.cpb_idle_state_selector);
             mIdleColorState = getResources().getColorStateList(idleStateSelector);
@@ -525,10 +526,10 @@ public class CircularProgressButton extends Button {
             mState = State.IDLE;
 
             mStateManager.checkState(CircularProgressButton.this);
-            if (mStrokeColor != -1) {
+            if (mStrokeColor != COLOR_TRANSPARENT) {
                 background.setStrokeColor(mStrokeColor);
             }
-            if (mIdleStrokeWidth != -1) {
+            if (mIdleStrokeWidth != COLOR_TRANSPARENT) {
                 background.setStrokeWidth(mIdleStrokeWidth);
             }
         }
