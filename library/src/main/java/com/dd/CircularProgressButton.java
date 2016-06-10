@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -19,8 +20,6 @@ import android.widget.Button;
 import com.dd.circular.progress.button.R;
 
 public class CircularProgressButton extends Button {
-    private static final int COLOR_TRANSPARENT = 0;
-
     public static final int IDLE_STATE_PROGRESS = 0;
     public static final int ERROR_STATE_PROGRESS = -1;
     public static final int SUCCESS_STATE_PROGRESS = 100;
@@ -130,11 +129,11 @@ public class CircularProgressButton extends Button {
         int colorPressed = getPressedColor(mCompleteColorState);
 
         StrokeGradientDrawable drawablePressed = createDrawable(colorPressed);
-        if (mStrokeColor != COLOR_TRANSPARENT) {
+        if (mStrokeColor != Color.TRANSPARENT) {
             drawablePressed.setStrokeColor(mStrokeColor);
             background.setStrokeColor(mStrokeColor);
         }
-        if (mIdleStrokeWidth != COLOR_TRANSPARENT) {
+        if (mIdleStrokeWidth != Color.TRANSPARENT) {
             drawablePressed.setStrokeWidth(mIdleStrokeWidth);
         }
         mCompleteStateDrawable = new StateListDrawable();
@@ -156,19 +155,19 @@ public class CircularProgressButton extends Button {
         StrokeGradientDrawable drawableDisabled = createDrawable(colorDisabled);
         StrokeGradientDrawable drawableFocused = createDrawable(colorFocused);
         StrokeGradientDrawable drawablePressed = createDrawable(colorPressed);
-        if (mDisabledStrokeColor != COLOR_TRANSPARENT) {
+        if (mDisabledStrokeColor != Color.TRANSPARENT) {
             drawableDisabled.setStrokeColor(mDisabledStrokeColor);
         }
-        if (mDisabledStrokeWidth != COLOR_TRANSPARENT) {
+        if (mDisabledStrokeWidth != Color.TRANSPARENT) {
             drawableDisabled.setStrokeWidth(mDisabledStrokeWidth);
         }
 
-        if (mStrokeColor != COLOR_TRANSPARENT) {
+        if (mStrokeColor != Color.TRANSPARENT) {
             drawableFocused.setStrokeColor(mStrokeColor);
             drawablePressed.setStrokeColor(mStrokeColor);
             background.setStrokeColor(mStrokeColor);
         }
-        if (mIdleStrokeWidth != COLOR_TRANSPARENT) {
+        if (mIdleStrokeWidth != Color.TRANSPARENT) {
             drawableFocused.setStrokeWidth(mIdleStrokeWidth);
             drawablePressed.setStrokeWidth(mIdleStrokeWidth);
             background.setStrokeWidth(mIdleStrokeWidth);
@@ -251,11 +250,11 @@ public class CircularProgressButton extends Button {
             int white = getColor(R.color.cpb_white);
             int grey = getColor(R.color.cpb_grey);
 
-            mDisabledStrokeColor = attr.getColor(R.styleable.CircularProgressButton_cpb_disabledStrokeColor, COLOR_TRANSPARENT);
-            mDisabledStrokeWidth = attr.getDimensionPixelSize(R.styleable.CircularProgressButton_cpb_disabledStrokeWidth, COLOR_TRANSPARENT);
-            mStrokeColor = attr.getColor(R.styleable.CircularProgressButton_cpb_strokeColor, COLOR_TRANSPARENT);
+            mDisabledStrokeColor = attr.getColor(R.styleable.CircularProgressButton_cpb_disabledStrokeColor, Color.TRANSPARENT);
+            mDisabledStrokeWidth = attr.getDimensionPixelSize(R.styleable.CircularProgressButton_cpb_disabledStrokeWidth, Color.TRANSPARENT);
+            mStrokeColor = attr.getColor(R.styleable.CircularProgressButton_cpb_strokeColor, Color.TRANSPARENT);
             mStrokeWidth = attr.getDimensionPixelSize(R.styleable.CircularProgressButton_cpb_strokeWidth, mStrokeWidth);
-            mIdleStrokeWidth = attr.getDimensionPixelSize(R.styleable.CircularProgressButton_cpb_idleStrokeWidth, COLOR_TRANSPARENT);
+            mIdleStrokeWidth = attr.getDimensionPixelSize(R.styleable.CircularProgressButton_cpb_idleStrokeWidth, Color.TRANSPARENT);
 
             int idleStateSelector = attr.getResourceId(R.styleable.CircularProgressButton_cpb_selectorIdle, R.color.cpb_idle_state_selector);
             mIdleColorState = getResources().getColorStateList(idleStateSelector);
@@ -526,10 +525,10 @@ public class CircularProgressButton extends Button {
             mState = State.IDLE;
 
             mStateManager.checkState(CircularProgressButton.this);
-            if (mStrokeColor != COLOR_TRANSPARENT) {
+            if (mStrokeColor != Color.TRANSPARENT) {
                 background.setStrokeColor(mStrokeColor);
             }
-            if (mIdleStrokeWidth != COLOR_TRANSPARENT) {
+            if (mIdleStrokeWidth != Color.TRANSPARENT) {
                 background.setStrokeWidth(mIdleStrokeWidth);
             }
         }
